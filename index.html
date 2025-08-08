@@ -648,6 +648,7 @@
             <div>WPM: <span id="wpm">0</span></div>
             <div>Accuracy: <span id="accuracy">100%</span></div>
             <div>Time: <span id="timer">0s</span></div>
+            <div>Errors: <span id="errors">0</span></div> <!-- New: Errors display -->
         </div>
 
         <!-- Control Buttons -->
@@ -717,6 +718,7 @@
         const wpmSpan = document.getElementById('wpm');
         const accuracySpan = document.getElementById('accuracy');
         const timerSpan = document.getElementById('timer');
+        const errorsSpan = document.getElementById('errors'); // New: Errors display element
         const startButton = document.getElementById('startButton');
         const messageBox = document.getElementById('messageBox');
         const messageText = document.getElementById('messageText');
@@ -940,7 +942,7 @@
         }
 
         /**
-         * Calculates and updates WPM and accuracy.
+         * Calculates and updates WPM and accuracy, including errors.
          */
         function updateStats() {
             const elapsedTime = (Date.now() - startTime) / 1000;
@@ -953,9 +955,11 @@
 
                 const accuracy = totalTypedCharacters === 0 ? 100 : Math.round((correctCharacters / totalTypedCharacters) * 100);
                 accuracySpan.textContent = `${accuracy}%`;
+                errorsSpan.textContent = errors; // Update errors display
             } else {
                 wpmSpan.textContent = '0';
                 accuracySpan.textContent = '100%';
+                errorsSpan.textContent = '0'; // Ensure errors is 0 initially
             }
         }
 
@@ -969,7 +973,7 @@
             startTime = 0;
             totalTypedCharacters = 0;
             correctCharacters = 0;
-            errors = 0;
+            errors = 0; // Reset errors on game reset
             testStarted = false;
             previousTypedValueLength = 0;
 
@@ -978,6 +982,7 @@
             wpmSpan.textContent = '0';
             accuracySpan.textContent = '100%';
             timerSpan.textContent = '0s';
+            errorsSpan.textContent = '0'; // Reset errors display
             startButton.textContent = 'Start Test';
             startButton.classList.remove('bg-green-600', 'hover:bg-green-700');
             startButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
@@ -1072,6 +1077,7 @@
 
                 const finalWPM = wpmSpan.textContent;
                 const finalAccuracy = accuracySpan.textContent;
+                const finalErrors = errorsSpan.textContent; // Get final errors
 
                 testsCompletedCount++; // Increment count only on successful completion
 
@@ -1081,12 +1087,12 @@
                 // Check if it's time to prompt for the game
                 if (!gameEnabled && testsCompletedCount >= GAME_PROMPT_THRESHOLD) {
                     showMessageBox(
-                        `Test Finished! Your WPM: ${finalWPM}, Accuracy: ${finalAccuracy}. You've completed ${testsCompletedCount} practice rounds. Would you like to enable the typing car game for more fun?`,
+                        `Test Finished! Your WPM: ${finalWPM}, Accuracy: ${finalAccuracy}, Errors: ${finalErrors}. You've completed ${testsCompletedCount} practice rounds. Would you like to enable the typing car game for more fun?`,
                         true
                     );
                 } else {
                     // Regular completion message
-                    showMessageBox(`Test Finished! Your WPM: ${finalWPM}, Accuracy: ${finalAccuracy}`);
+                    showMessageBox(`Test Finished! Your WPM: ${finalWPM}, Accuracy: ${finalAccuracy}, Errors: ${finalErrors}.`);
                     startButton.textContent = 'Start New Test';
                 }
             }
@@ -1267,7 +1273,7 @@
                     const pcmData = base64ToArrayBuffer(audioData);
                     const pcm16 = new Int16Array(pcmData);
                     const wavBlob = pcmToWav(pcm16, sampleRate);
-                    const audio = new Audio(audioUrl);
+                    const audio = new Audio(URL.createObjectURL(wavBlob)); // Create URL from blob
                     audio.play();
 
                     audio.onended = () => {
@@ -1315,7 +1321,7 @@
             setupCanvas(); /* Set up canvas dimensions */
             resetGame(); /* Set up initial text and disable input, reset typing stats */
             gameLoop(); /* Start the animation loop (car will be static until test starts) */
-            // Removed speakWelcomeMessage() from here to prevent NotAllowedError
+            // speakWelcomeMessage() is now called when the test actually starts via startActualTest()
         };
 
         // Handle canvas resize
