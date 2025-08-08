@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Typing Keyboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        .text-display {
+            background-color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            line-height: 1.8;
+            text-align: left;
+            min-height: 120px;
+            overflow-y: auto;
+            border: 2px solid #cbd5e1;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+            user-select: none;
+        }
+        .text-display span {
+            transition: background-color 0.1s;
+            display: inline-block;
+            padding: 0 1px;
+        }
+        .correct {
+            color: #16a34a;
+        }
+        .incorrect {
+            background-color: #ef4444;
+            color: #ffffff;
+            border-radius: 3px;
+        }
+        .current {
+            background-color: #bfdbfe;
+            border-radius: 3px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #94a3b8;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            font-size: 1.2rem;
+            color: #475569;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .stats div {
+            padding: 10px 15px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            min-width: 120px;
+        }
+        .stats span {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .button-group button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+            margin: 5px; /* Added margin for button spacing */
+        }
+        .button-group button:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+        }
+        .button-group button:active {
+            background-color: #1d4ed8;
+            transform: translateY(0);
+        }
+        .message-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #1e293b;
+            max-width: 400px;
+            width: 90%;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .message-box p {
+            margin-bottom: 20px;
+        }
+        .message-box button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .message-box button:hover {
+            background-color: #2563eb;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        /* Virtual Keyboard Styles */
+        .keyboard-container {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        .keyboard-key {
+            background-color: #cbd5e1;
+            color: #1e293b;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            min-width: 45px; /* Standard key width */
+            text-align: center;
+            cursor: default;
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.1s, transform 0.05s;
+        }
+        .keyboard-key.wide {
+            min-width: 80px; /* For Tab, Caps Lock, Enter */
+        }
+        .keyboard-key.extra-wide {
+            min-width: 100px; /* For Shift */
+        }
+        .keyboard-key.space {
+            min-width: 300px; /* For Spacebar */
+        }
+
+        /* Key highlight for current character */
+        .keyboard-key.highlight-current {
+            background-color: #60a5fa; /* Blue for current character key */
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(96, 165, 250, 0.4);
+        }
+
+        /* Key pressed effect */
+        .keyboard-key.key-pressed {
+            background-color: #3b82f6;
+            color: white;
+            transform: translateY(0);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Home row keys */
+        .keyboard-key[data-key="f"],
+        .keyboard-key[data-key="j"] {
+            background-color: #fcd34d; /* Yellow for home row bumps */
+            color: #1e293b;
+        }
+
+        /* Hand placement guidance */
+        .hand-guidance {
+            font-size: 0.95rem;
+            color: #475569;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            text-align: left;
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .hand-guidance strong {
+            color: #1e293b;
+        }
+
+        /* Level Selector */
+        .level-selector {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .level-selector label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #334155;
+        }
+        .level-selector select {
+            padding: 10px 15px;
+            border: 2px solid #94a3b8;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            background-color: white;
+            appearance: none; /* Remove default dropdown arrow */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%236B7280' d='M9.293 12.95l.707.707L15 8.172l-1.414-1.414L10 10.343l-3.586-3.585L5 8.172z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 1.2em;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .level-selector select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Game Canvas Styles */
+        #gameCanvas {
+            display: none; /* Hidden by default */
+            width: 100%;
+            height: 150px; /* Fixed height for the game area */
+            max-width: 800px; /* Match container max-width */
+            margin: 0 auto 25px auto; /* Center it and add bottom margin */
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            background-color: #a0c4ff; /* Sky color */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .keyboard-key {
+                min-width: 35px;
+                font-size: 0.9rem;
+                padding: 8px 10px;
+            }
+            .keyboard-key.wide {
+                min-width: 60px;
+            }
+            .keyboard-key.extra-wide {
+                min-width: 80px;
+            }
+            .keyboard-key.space {
+                min-width: 200px;
+            }
+            .keyboard-container {
+                padding: 15px;
+            }
+            .keyboard-row {
+                gap: 4px;
+            }
+            .hand-guidance {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+            #gameCanvas {
+                height: 120px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 20px;
+            }
+            .text-display {
+                font-size: 1.1rem;
+                line-height: 1.6;
+            }
+            .input-field {
+                font-size: 1.1rem;
+            }
+            .stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            .stats div {
+                width: 80%;
+            }
+            .button-group button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            .level-selector {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .level-selector select {
+                width: 100%;
+                max-width: 250px;
+            }
+            .keyboard-key {
+                min-width: 30px;
+                font-size: 0.8rem;
+                padding: 6px 8px;
+            }
+            .keyboard-key.wide {
+                min-width: 50px;
+            }
+            .keyboard-key.extra-wide {
+                min-width: 70px;
+            }
+            .keyboard-key.space {
+                min-width: 150px;
+            }
+            #gameCanvas {
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-6">Fast Typing Keyboard</h1>
+
+        <!-- Level Selector -->
+        <div class="level-selector">
+            <label for="levelSelect">Choose Level:</label>
+            <select id="levelSelect" class="cursor-pointer">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
+        </div>
+
+        <!-- Hand Placement Guidance -->
+        <div class="hand-guidance">
+            <p><strong>Hand Placement Guide:</strong></p>
+            <ul class="list-disc list-inside mt-2 text-sm">
+                <li>Place your left index finger on <strong class="text-yellow-600">F</strong> and right index finger on <strong class="text-yellow-600">J</strong> (these keys often have a small bump).</li>
+                <li>Your other fingers should naturally rest on the keys next to them:
+                    <ul class="list-disc list-inside ml-4">
+                        <li>Left hand: Pinky on A, Ring on S, Middle on D, Index on F.</li>
+                        <li>Right hand: Index on J, Middle on K, Ring on L, Pinky on ; (semicolon).</li>
+                    </ul>
+                </li>
+                <li>Thumbs rest lightly on the **Spacebar**.</li>
+                <li>Always return your fingers to the home row after striking a key.</li>
+            </ul>
+        </div>
+
+        <!-- Virtual Keyboard Display -->
+        <div class="keyboard-container">
+            <div class="keyboard-row">
+                <span class="keyboard-key" data-key="`">`</span>
+                <span class="keyboard-key" data-key="1">1</span>
+                <span class="keyboard-key" data-key="2">2</span>
+                <span class="keyboard-key" data-key="3">3</span>
+                <span class="keyboard-key" data-key="4">4</span>
+                <span class="keyboard-key" data-key="5">5</span>
+                <span class="keyboard-key" data-key="6">6</span>
+                <span class="keyboard-key" data-key="7">7</span>
+                <span class="keyboard-key" data-key="8">8</span>
+                <span class="keyboard-key" data-key="9">9</span>
+                <span class="keyboard-key" data-key="0">0</span>
+                <span class="keyboard-key" data-key="-">-</span>
+                <span class="keyboard-key" data-key="=">=</span>
+                <span class="keyboard-key wide" data-key="backspace">Backspace</span>
+            </div>
+            <div class="keyboard-row">
+                <span class="keyboard-key wide" data-key="tab">Tab</span>
+                <span class="keyboard-key" data-key="q">Q</span>
+                <span class="keyboard-key" data-key="w">W</span>
+                <span class="keyboard-key" data-key="e">E</span>
+                <span class="keyboard-key" data-key="r">R</span>
+                <span class="keyboard-key" data-key="t">T</span>
+                <span class="keyboard-key" data-key="y">Y</span>
+                <span class="keyboard-key" data-key="u">U</span>
+                <span class="keyboard-key" data-key="i">I</span>
+                <span class="keyboard-key" data-key="o">O</span>
+                <span class="keyboard-key" data-key="p">P</span>
+                <span class="keyboard-key" data-key="[">[</span>
+                <span class="keyboard-key" data-key="]">]</span>
+                <span class="keyboard-key wide" data-key="\-backslash">\</span>
+            </div>
+            <div class="keyboard-row">
+                <span class="keyboard-key wide" data-key="capslock">Caps Lock</span>
+                <span class="keyboard-key" data-key="a">A</span>
+                <span class="keyboard-key" data-key="s">S</span>
+                <span class="keyboard-key" data-key="d">D</span>
+                <span class="keyboard-key" data-key="f">F</span>
+                <span class="keyboard-key" data-key="g">G</span>
+                <span class="keyboard-key" data-key="h">H</span>
+                <span class="keyboard-key" data-key="j">J</span>
+                <span class="keyboard-key" data-key="k">K</span>
+                <span class="keyboard-key" data-key="l">L</span>
+                <span class="keyboard-key" data-key=";">;</span>
+                <span class="keyboard-key" data-key="'">'</span>
+                <span class="keyboard-key wide" data-key="enter">Enter</span>
+            </div>
+            <div class="keyboard-row">
+                <span class="keyboard-key extra-wide" data-key="shift-left">Shift</span>
+                <span class="keyboard-key" data-key="z">Z</span>
+                <span class="keyboard-key" data-key="x">X</span>
+                <span class="keyboard-key" data-key="c">C</span>
+                <span class="keyboard-key" data-key="v">V</span>
+                <span class="keyboard-key" data-key="b">B</span>
+                <span class="keyboard-key" data-key="n">N</span>
+                <span class="keyboard-key" data-key="m">M</span>
+                <span class="keyboard-key" data-key=",">,</span>
+                <span class="keyboard-key" data-key=".">.</span>
+                <span class="keyboard-key" data-key="/">/</span>
+                <span class="keyboard-key extra-wide" data-key="shift-right">Shift</span>
+            </div>
+            <div class="keyboard-row">
+                <span class="keyboard-key wide" data-key="control-left">Ctrl</span>
+                <span class="keyboard-key wide" data-key="alt-left">Alt</span>
+                <span class="keyboard-key space" data-key=" ">Space</span>
+                <span class="keyboard-key wide" data-key="alt-right">Alt</span>
+                <span class="keyboard-key wide" data-key="control-right">Ctrl</span>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Text Display Area -->
+        <div id="textDisplay" class="text-display"></div>
+
+        <!-- User Input Field -->
+        <input type="text" id="typingInput" class="input-field" placeholder="Start typing here..." autofocus disabled>
+
+        <!-- Stats Section -->
+        <div class="stats">
+            <div>WPM: <span id="wpm">0</span></div>
+            <div>Accuracy: <span id="accuracy">100%</span></div>
+            <div>Time: <span id="timer">0s</span></div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="button-group">
+            <button id="startButton">Start Test</button>
+        </div>
+    </div>
+
+    <!-- Message Box for Alerts -->
+    <div id="overlay" class="overlay"></div>
+    <div id="messageBox" class="message-box hidden">
+        <p id="messageText"></p>
+        <div id="messageBoxButtons" class="flex justify-center gap-4 mt-4">
+            <button id="messageBoxOk" class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white">OK</button>
+            <button id="messageBoxYes" class="hidden px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white">Yes, play game!</button>
+            <button id="messageBoxNo" class="hidden px-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white">No, thanks</button>
+        </div>
+    </div>
+
+    <script>
+        // Sentences for different typing levels
+        const levelSentences = {
+            beginner: [
+                "a s d f j k l ;",
+                "a a a s s s d d d",
+                "f j f j k l k l",
+                "the and for is it",
+                "a cat a dog a hat",
+                "my pen my bag my book",
+                "i am you are he is",
+                "go go go no no no",
+                "yes yes yes one two three",
+                "red blue green yellow"
+            ],
+            intermediate: [
+                "The quick brown fox jumps over the lazy dog.",
+                "Never underestimate the power of a good book.",
+                "Technology has revolutionized the way we live and work.",
+                "The sun always shines brightest after the rain.",
+                "Learning a new skill can open up many opportunities.",
+                "Practice makes perfect, especially in typing.",
+                "The early bird catches the worm.",
+                "Innovation is the key to progress.",
+                "Coding is a blend of logic and creativity.",
+                "The mountains are calling and I must go."
+            ],
+            advanced: [
+                "In the realm of artificial intelligence, machine learning algorithms continuously refine their predictive models based on vast datasets, leading to breakthroughs in various scientific disciplines.",
+                "The unparalleled beauty of the Aurora Borealis, visible only in the extreme northern and southern latitudes, is a breathtaking celestial phenomenon caused by the collision of solar wind particles with Earth's magnetosphere.",
+                "Quantum computing promises to revolutionize cryptography and drug discovery by leveraging the principles of superposition and entanglement, enabling calculations far beyond the capabilities of classical computers.",
+                "Sustainable urban development integrates ecological principles with socioeconomic considerations to create resilient, livable cities that minimize environmental impact and promote community well-being.",
+                "The intricacies of classical music composition often involve complex counterpoint, harmonic progressions, and thematic development, reflecting centuries of evolving artistic expression and theoretical innovation."
+            ]
+        };
+
+        // Get DOM elements
+        const textDisplay = document.getElementById('textDisplay');
+        const typingInput = document.getElementById('typingInput');
+        const wpmSpan = document.getElementById('wpm');
+        const accuracySpan = document.getElementById('accuracy');
+        const timerSpan = document.getElementById('timer');
+        const startButton = document.getElementById('startButton');
+        const messageBox = document.getElementById('messageBox');
+        const messageText = document.getElementById('messageText');
+        const messageBoxOk = document.getElementById('messageBoxOk');
+        const messageBoxYes = document.getElementById('messageBoxYes');
+        const messageBoxNo = document.getElementById('messageBoxNo');
+        const overlay = document.getElementById('overlay');
+        const levelSelect = document.getElementById('levelSelect');
+        const keyboardKeys = document.querySelectorAll('.keyboard-key');
+        const gameCanvas = document.getElementById('gameCanvas'); // Moved here
+
+        // Game state variables
+        let currentText = '';
+        let currentIndex = 0;
+        let startTime = 0;
+        let timerInterval = null;
+        let totalTypedCharacters = 0;
+        let correctCharacters = 0;
+        let errors = 0;
+        let testStarted = false;
+        let currentLevel = 'beginner'; // Default level
+        let previousTypedValueLength = 0; // To track new characters for game speed
+        let testsCompletedCount = 0; // Counter for completed tests
+        let gameEnabled = false; // Flag to enable/disable the car game
+        const GAME_PROMPT_THRESHOLD = 3; // Number of tests before prompting for the game
+
+        // Game canvas variables
+        const ctx = gameCanvas.getContext('2d');
+        let carX = gameCanvas.width / 4; // Car's X position on canvas
+        const carY = gameCanvas.height - 40; // Car's Y position (constant, near bottom of canvas)
+        let gameSpeed = 0; // Initial speed of the game visual (road movement)
+        const maxGameSpeed = 10; // Max speed for the car visual
+        const speedIncrement = 0.5; // How much speed increases per correct char
+        const speedDecrement = 1; // How much speed decreases per incorrect char
+        let roadLineOffset = 0; // For animating road lines
+        let animationFrameId = null; // For requestAnimationFrame
+
+        /**
+         * Adjusts the canvas dimensions to be responsive.
+         */
+        function setupCanvas() {
+            gameCanvas.width = gameCanvas.offsetWidth;
+            gameCanvas.height = gameCanvas.offsetHeight;
+            // Re-calculate carX based on new width
+            carX = gameCanvas.width / 4;
+        }
+
+        /**
+         * Shows a custom message box instead of alert().
+         * @param {string} message The message to display.
+         * @param {boolean} [isGamePrompt=false] True if this is a game prompt, showing Yes/No buttons.
+         */
+        function showMessageBox(message, isGamePrompt = false) {
+            messageText.textContent = message;
+            messageBox.classList.remove('hidden');
+            overlay.style.display = 'block';
+            typingInput.disabled = true;
+            startButton.disabled = true; // Disable main start button while message box is open
+
+            if (isGamePrompt) {
+                messageBoxOk.classList.add('hidden');
+                messageBoxYes.classList.remove('hidden');
+                messageBoxNo.classList.remove('hidden');
+            } else {
+                messageBoxOk.classList.remove('hidden');
+                messageBoxYes.classList.add('hidden');
+                messageBoxNo.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Hides the custom message box.
+         */
+        function hideMessageBox() {
+            messageBox.classList.add('hidden');
+            overlay.style.display = 'none';
+            startButton.disabled = false; // Re-enable main start button
+            if (testStarted) { // Only re-enable typing input if a test is ongoing (e.g., after dismissing a non-game message)
+                typingInput.disabled = false;
+                typingInput.focus();
+            } else {
+                // If test is not started (e.g., after test finished message), ensure input remains disabled until start is clicked
+                typingInput.disabled = true;
+            }
+        }
+
+        // Event listeners for message box buttons
+        messageBoxOk.addEventListener('click', () => {
+            hideMessageBox();
+            if (!testStarted) { // If test just finished and OK was clicked, prepare for a new test
+                startButton.textContent = 'Start New Test';
+            }
+        });
+
+        messageBoxYes.addEventListener('click', () => {
+            gameEnabled = true;
+            testsCompletedCount = 0; // Reset counter so the game is now permanently active (until reload)
+            hideMessageBox();
+            startActualTest(); // Immediately start a new test with game enabled
+        });
+
+        messageBoxNo.addEventListener('click', () => {
+            gameEnabled = false;
+            testsCompletedCount = 0; // Reset counter so prompt reappears after next GAME_PROMPT_THRESHOLD tests
+            hideMessageBox();
+            startActualTest(); // Immediately start a new test without game enabled
+        });
+
+        /**
+         * Selects a random sentence based on the current level.
+         * @returns {string} A random sentence from the selected level's list.
+         */
+        function getRandomSentenceForLevel() {
+            const sentences = levelSentences[currentLevel];
+            const randomIndex = Math.floor(Math.random() * sentences.length);
+            return sentences[randomIndex];
+        }
+
+        /**
+         * Clears all key highlights on the virtual keyboard.
+         */
+        function clearKeyHighlights() {
+            keyboardKeys.forEach(key => {
+                key.classList.remove('highlight-current', 'key-pressed');
+            });
+        }
+
+        /**
+         * Highlights the current character's key on the virtual keyboard.
+         */
+        function highlightCurrentKey() {
+            clearKeyHighlights();
+            if (currentIndex < currentText.length) {
+                let charToHighlight = currentText[currentIndex];
+                let keyElement = null;
+
+                // Handle Shift for uppercase letters and symbols
+                if (charToHighlight === charToHighlight.toUpperCase() && charToHighlight.match(/[A-Z]/)) {
+                    keyElement = document.querySelector(`.keyboard-key[data-key="${charToHighlight.toLowerCase()}"]`);
+                    document.querySelector('.keyboard-key[data-key="shift-left"]').classList.add('highlight-current');
+                    document.querySelector('.keyboard-key[data-key="shift-right"]').classList.add('highlight-current');
+                } else if (charToHighlight.match(/[!@#$%^&*()_+{}:"<>?~|]/)) {
+                    const specialKeys = {
+                        '!': '1', '@': '2', '#': '3', '$': '4', '%': '5', '^': '6', '&': '7', '*': '8', '(': '9', ')': '0',
+                        '_': '-', '+': '=', '{': '[', '}': ']', ':': ';', '"': "'", '<': ',', '>': '.', '?': '/', '|': '\\-backslash'
+                    };
+                    const baseKey = specialKeys[charToHighlight];
+                    if (baseKey) {
+                        keyElement = document.querySelector(`.keyboard-key[data-key="${baseKey}"]`);
+                        document.querySelector('.keyboard-key[data-key="shift-left"]').classList.add('highlight-current');
+                        document.querySelector('.keyboard-key[data-key="shift-right"]').classList.add('highlight-current');
+                    }
+                } else if (charToHighlight === ' ') {
+                     keyElement = document.querySelector(`.keyboard-key[data-key=" "]`);
+                }
+                else {
+                    keyElement = document.querySelector(`.keyboard-key[data-key="${charToHighlight.toLowerCase()}"]`);
+                }
+
+                if (keyElement) {
+                    keyElement.classList.add('highlight-current');
+                }
+            }
+        }
+
+        /**
+         * Simulates a key press on the virtual keyboard.
+         * @param {string} key The character or data-key value of the pressed key.
+         */
+        function simulateKeyPress(key) {
+            let keyToPress = key.toLowerCase();
+            if (key === ' ') {
+                keyToPress = ' ';
+            } else if (key === '\\') {
+                keyToPress = '\\-backslash';
+            }
+
+            const keyElement = document.querySelector(`.keyboard-key[data-key="${keyToPress}"]`);
+            if (keyElement) {
+                keyElement.classList.add('key-pressed');
+                setTimeout(() => {
+                    keyElement.classList.remove('key-pressed');
+                }, 150);
+            }
+
+            document.querySelector('.keyboard-key[data-key="shift-left"]').classList.remove('key-pressed');
+            document.querySelector('.keyboard-key[data-key="shift-right"]').classList.remove('key-pressed');
+        }
+
+        /**
+         * Renders the text in the display area, highlighting correct, incorrect, and current characters.
+         */
+        function renderText() {
+            textDisplay.innerHTML = '';
+            currentText.split('').forEach((char, index) => {
+                const span = document.createElement('span');
+                span.textContent = char;
+                if (index < currentIndex) {
+                    if (typingInput.value[index] === char) {
+                        span.classList.add('correct');
+                    } else {
+                        span.classList.add('incorrect');
+                    }
+                } else if (index === currentIndex) {
+                    span.classList.add('current');
+                }
+                textDisplay.appendChild(span);
+            });
+            const currentSpan = textDisplay.querySelector('.current');
+            if (currentSpan) {
+                const textDisplayRect = textDisplay.getBoundingClientRect();
+                const currentSpanRect = currentSpan.getBoundingClientRect();
+
+                if (currentSpanRect.top < textDisplayRect.top || currentSpanRect.bottom > textDisplayRect.bottom) {
+                    textDisplay.scrollTop += currentSpanRect.top - textDisplayRect.top - (textDisplay.clientHeight / 3);
+                }
+            }
+            highlightCurrentKey();
+        }
+
+        /**
+         * Calculates and updates WPM and accuracy.
+         */
+        function updateStats() {
+            const elapsedTime = (Date.now() - startTime) / 1000;
+            timerSpan.textContent = `${Math.floor(elapsedTime)}s`;
+
+            if (elapsedTime > 0) {
+                const wordsTyped = correctCharacters / 5;
+                const wpm = Math.round((wordsTyped / elapsedTime) * 60);
+                wpmSpan.textContent = wpm;
+
+                const accuracy = totalTypedCharacters === 0 ? 100 : Math.round((correctCharacters / totalTypedCharacters) * 100);
+                accuracySpan.textContent = `${accuracy}%`;
+            } else {
+                wpmSpan.textContent = '0';
+                accuracySpan.textContent = '100%';
+            }
+        }
+
+        /**
+         * Resets the game to its initial state, preparing for a new test.
+         */
+        function resetGame() {
+            clearInterval(timerInterval);
+            currentText = getRandomSentenceForLevel();
+            currentIndex = 0;
+            startTime = 0;
+            totalTypedCharacters = 0;
+            correctCharacters = 0;
+            errors = 0;
+            testStarted = false;
+            previousTypedValueLength = 0;
+
+            typingInput.value = '';
+            typingInput.disabled = true;
+            wpmSpan.textContent = '0';
+            accuracySpan.textContent = '100%';
+            timerSpan.textContent = '0s';
+            startButton.textContent = 'Start Test';
+            startButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+            startButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            levelSelect.disabled = false;
+
+            gameSpeed = 0; // Stop car animation on reset
+            gameCanvas.style.display = 'none'; // Ensure canvas is hidden on reset
+
+            renderText();
+        }
+
+        /**
+         * Starts the actual typing test, managing game visibility.
+         */
+        function startActualTest() {
+            resetGame(); // Ensure everything is clean for the new test
+            testStarted = true;
+            typingInput.disabled = false;
+            typingInput.focus();
+            startTime = Date.now();
+            timerInterval = setInterval(updateStats, 1000);
+            startButton.textContent = 'Reset Test';
+            startButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            startButton.classList.add('bg-green-600', 'hover:bg-green-700');
+            levelSelect.disabled = true;
+
+            if (gameEnabled) { // Show canvas if game is enabled
+                gameCanvas.style.display = 'block';
+            } else {
+                gameCanvas.style.display = 'none'; // Keep canvas hidden if game is not enabled
+            }
+        }
+
+
+        /**
+         * Handles user input from the typing field, updating typing stats and game speed.
+         * @param {Event} event The input event.
+         */
+        function handleInput(event) {
+            if (!testStarted) return;
+
+            const typedValue = typingInput.value;
+
+            // Simulate key press on virtual keyboard
+            if (event.data) {
+                simulateKeyPress(event.data);
+            }
+
+            // Logic for updating correct/incorrect characters and index, and influencing game speed
+            if (typedValue.length > previousTypedValueLength) {
+                // A new character was added
+                const originalChar = currentText[typedValue.length - 1];
+                const typedChar = typedValue[typedValue.length - 1];
+                if (typedChar === originalChar) {
+                    // Correct new character
+                    if (gameEnabled) updateGameSpeed(true);
+                } else {
+                    // Incorrect new character
+                    if (gameEnabled) updateGameSpeed(false);
+                }
+            } // No speed change for backspace or in-place replacement.
+
+            // Recalculate correctCharacters and errors based on the *entire* current typedValue
+            correctCharacters = 0;
+            errors = 0;
+            for (let i = 0; i < typedValue.length; i++) {
+                if (typedValue[i] === currentText[i]) {
+                    correctCharacters++;
+                } else {
+                    errors++;
+                }
+            }
+
+            currentIndex = typedValue.length;
+            totalTypedCharacters = typedValue.length;
+            previousTypedValueLength = typedValue.length;
+
+            renderText();
+            updateStats();
+
+            // Check if the user has finished typing the entire text
+            if (currentIndex === currentText.length && typedValue.length === currentText.length) {
+                clearInterval(timerInterval);
+                testStarted = false;
+                typingInput.disabled = true;
+
+                const finalWPM = wpmSpan.textContent;
+                const finalAccuracy = accuracySpan.textContent;
+
+                testsCompletedCount++; // Increment count only on successful completion
+
+                clearKeyHighlights();
+                gameSpeed = 0; // Stop car when test ends
+
+                // Check if it's time to prompt for the game
+                if (!gameEnabled && testsCompletedCount >= GAME_PROMPT_THRESHOLD) {
+                    showMessageBox(
+                        `Test Finished! Your WPM: ${finalWPM}, Accuracy: ${finalAccuracy}. You've completed ${testsCompletedCount} practice rounds. Would you like to enable the typing car game for more fun?`,
+                        true
+                    );
+                } else {
+                    // Regular completion message
+                    showMessageBox(`Test Finished! Your WPM: ${finalWPM}, Accuracy: ${finalAccuracy}`);
+                    startButton.textContent = 'Start New Test';
+                }
+            }
+        }
+
+        // --- Game Canvas Drawing Functions ---
+
+        /**
+         * Draws the car on the canvas.
+         */
+        function drawCar() {
+            // Body
+            ctx.fillStyle = '#3b82f6'; // Blue car
+            ctx.beginPath();
+            ctx.roundRect(carX, carY - 20, 60, 20, 5); // Main body
+            ctx.fill();
+
+            // Cabin
+            ctx.fillStyle = '#60a5fa'; // Lighter blue for cabin
+            ctx.beginPath();
+            ctx.roundRect(carX + 10, carY - 35, 40, 15, 3);
+            ctx.fill();
+
+            // Wheels
+            ctx.fillStyle = '#334155'; // Dark grey for wheels
+            ctx.beginPath();
+            ctx.arc(carX + 15, carY + 5, 10, 0, Math.PI * 2);
+            ctx.arc(carX + 45, carY + 5, 10, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        /**
+         * Draws the road on the canvas, with animated lines.
+         */
+        function drawRoad() {
+            ctx.fillStyle = '#6b7280'; // Darker grey for road
+            ctx.fillRect(0, gameCanvas.height - 20, gameCanvas.width, 20); // Road base
+
+            // Road lines
+            ctx.fillStyle = '#fcd34d'; // Yellow lines
+            const lineHeight = 5;
+            const lineGap = 15;
+            const lineWidth = 30;
+            const totalLinePattern = lineWidth + lineGap; // Space occupied by one line + gap
+
+            roadLineOffset += gameSpeed * 0.5; // Move lines based on game speed (adjusted for visual smoothness)
+            if (roadLineOffset > totalLinePattern) {
+                roadLineOffset %= totalLinePattern;
+            }
+
+            // Draw multiple lines to cover the entire width
+            for (let i = -2; i < gameCanvas.width / totalLinePattern + 2; i++) { // Render extra lines off-screen for seamless loop
+                ctx.fillRect(i * totalLinePattern + roadLineOffset, gameCanvas.height - 10, lineWidth, 2); // Dashed lines
+            }
+        }
+
+        /**
+         * Updates the game speed based on typing correctness.
+         * @param {boolean} isCorrect True if the last typed character was correct, false otherwise.
+         */
+        function updateGameSpeed(isCorrect) {
+            if (isCorrect) {
+                gameSpeed = Math.min(maxGameSpeed, gameSpeed + speedIncrement);
+            } else {
+                gameSpeed = Math.max(0, gameSpeed - speedDecrement);
+            }
+        }
+
+        /**
+         * Main game animation loop. Clears canvas, draws elements, and requests next frame.
+         */
+        function gameLoop() {
+            ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height); // Clear canvas
+
+            if (gameEnabled) { // Only draw game elements if game is enabled
+                drawRoad();
+                drawCar();
+            } else {
+                // Draw a static background if game is not enabled to avoid blank canvas
+                ctx.fillStyle = '#a0c4ff'; // Sky color
+                ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+            }
+
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        // Event listener for the main Start/Reset button
+        startButton.addEventListener('click', () => {
+            if (testStarted) { // If a test is currently running, this button acts as "Reset"
+                resetGame();
+            } else { // If no test is running, this button acts as "Start"
+                if (!gameEnabled && testsCompletedCount >= GAME_PROMPT_THRESHOLD) {
+                    showMessageBox(
+                        `You've completed ${testsCompletedCount} practice rounds! Would you like to enable the typing car game for more fun?`,
+                        true
+                    );
+                } else {
+                    // Either game is already enabled, or not enough tests completed for prompt
+                    startActualTest();
+                }
+            }
+        });
+
+        typingInput.addEventListener('input', handleInput);
+
+        levelSelect.addEventListener('change', (event) => {
+            currentLevel = event.target.value;
+            resetGame(); // Reset game with new level's sentences
+        });
+
+        // Initialize the game and start the animation loop when the page loads
+        window.onload = function() {
+            setupCanvas(); // Set up canvas dimensions
+            resetGame(); // Set up initial text and disable input, reset typing stats
+            gameLoop(); // Start the animation loop (car will be static until test starts)
+        };
+
+        // Handle canvas resize
+        window.addEventListener('resize', setupCanvas);
+    </script>
+</body>
+</html>
