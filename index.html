@@ -8,29 +8,119 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Base styles for professionalism */
+        /* CSS Variables for Light Mode */
+        :root {
+            --body-bg-gradient-start: #e0e7ff;
+            --body-bg-gradient-end: #c3daff;
+            --body-pattern-color: #d0d8ff;
+            --container-bg: #ffffff;
+            --container-border: #d1d5db;
+            --heading-color: #2563eb;
+            --text-display-bg: #f1f5f9;
+            --text-display-border: #cbd5e1;
+            --text-display-text-color: #334155;
+            --input-field-border: #94a3b8;
+            --input-field-text-color: #1f2937;
+            --stats-bg: #f8fafc;
+            --stats-border: #e2e8f0;
+            --stats-text-color: #4b5563;
+            --stats-value-color: #1e293b;
+            --button-bg: #3b82f6;
+            --button-hover-bg: #2563eb;
+            --button-active-bg: #1d4ed8;
+            --message-box-bg: #fff;
+            --message-box-text-color: #1e293b;
+            --keyboard-container-bg: #f1f5f9;
+            --keyboard-container-border: #e2e8f0;
+            --keyboard-key-bg: #e2e8f0;
+            --keyboard-key-color: #334155;
+            --keyboard-key-border: #cbd5e1;
+            --keyboard-key-highlight: #60a5fa;
+            --keyboard-key-highlight-border: #3b82f6;
+            --keyboard-key-pressed: #3b82f6;
+            --keyboard-key-pressed-border: #2563eb;
+            --home-row-bg: #facc15;
+            --home-row-color: #422006;
+            --hand-guidance-color: #475569;
+            --hand-guidance-strong-color: #1e293b;
+            --hand-guidance-bg: #f8fafc;
+            --hand-guidance-border: #e2e8f0;
+            --level-select-label: #334155;
+            --level-select-border: #94a3b8;
+            --level-select-bg: white;
+            --tutor-speaking-bg: #dbeafe;
+            --tutor-speaking-color: #1e40af;
+            --tutor-speaking-border: #bfdbfe;
+            --tutor-speaking-dot: #3b82f6;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            --body-bg-gradient-start: #1a202c; /* Darker start */
+            --body-bg-gradient-end: #2d3748;   /* Darker end */
+            --body-pattern-color: #334155; /* Darker pattern */
+            --container-bg: #2d3748; /* Dark container */
+            --container-border: #4a5568;
+            --heading-color: #63b3ed; /* Lighter blue for dark mode heading */
+            --text-display-bg: #4a5568; /* Darker text area */
+            --text-display-border: #606f8b;
+            --text-display-text-color: #e2e8f0; /* Light text */
+            --input-field-border: #606f8b;
+            --input-field-text-color: #e2e8f0;
+            --stats-bg: #4a5568;
+            --stats-border: #606f8b;
+            --stats-text-color: #e2e8f0;
+            --stats-value-color: #f7fafc;
+            --button-bg: #4299e1; /* Lighter blue button */
+            --button-hover-bg: #3182ce;
+            --button-active-bg: #2b6cb0;
+            --message-box-bg: #4a5568;
+            --message-box-text-color: #e2e8f0;
+            --keyboard-container-bg: #4a5568;
+            --keyboard-container-border: #606f8b;
+            --keyboard-key-bg: #606f8b;
+            --keyboard-key-color: #e2e8f0;
+            --keyboard-key-border: #718096;
+            --keyboard-key-highlight: #63b3ed;
+            --keyboard-key-highlight-border: #4299e1;
+            --keyboard-key-pressed: #4299e1;
+            --keyboard-key-pressed-border: #3182ce;
+            --home-row-bg: #f6ad55; /* Orange-yellow for dark mode home row */
+            --home-row-color: #2d3748;
+            --hand-guidance-color: #cbd5e1;
+            --hand-guidance-strong-color: #f7fafc;
+            --hand-guidance-bg: #4a5568;
+            --hand-guidance-border: #606f8b;
+            --level-select-label: #e2e8f0;
+            --level-select-border: #606f8b;
+            --level-select-bg: #4a5568;
+            --tutor-speaking-bg: #3182ce;
+            --tutor-speaking-color: #fff;
+            --tutor-speaking-border: #2b6cb0;
+            --tutor-speaking-dot: #90cdf4;
+        }
+
+        /* Base styles using variables */
         body {
             font-family: 'Inter', sans-serif;
-            /* Main gradient background */
             background:
-                linear-gradient(135deg, #e0e7ff 0%, #c3daff 100%),
-                /* Keyboard pattern layer - subtle grid */
+                linear-gradient(135deg, var(--body-bg-gradient-start) 0%, var(--body-bg-gradient-end) 100%),
                 repeating-linear-gradient(
                     0deg,
-                    #d0d8ff 0px,
-                    #d0d8ff 2px,
+                    var(--body-pattern-color) 0px,
+                    var(--body-pattern-color) 2px,
                     transparent 2px,
                     transparent 22px
                 ),
                 repeating-linear-gradient(
                     90deg,
-                    #d0d8ff 0px,
-                    #d0d8ff 2px,
+                    var(--body-pattern-color) 0px,
+                    var(--body-pattern-color) 2px,
                     transparent 2px,
                     transparent 32px
                 );
-            background-blend-mode: overlay, normal, normal; /* Blend modes to make pattern subtle */
-            background-size: auto, 30px 30px, 40px 40px; /* Adjust size for pattern repeat */
+            background-blend-mode: overlay, normal, normal;
+            background-size: auto, 30px 30px, 40px 40px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -38,74 +128,80 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
+            transition: background-color 0.5s ease; /* Smooth transition for theme change */
         }
         .container {
-            background-color: #ffffff;
-            padding: 35px; /* Slightly reduced padding */
-            border-radius: 20px; /* More rounded corners */
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Stronger, softer shadow */
-            max-width: 800px; /* Made smaller */
+            background-color: var(--container-bg);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            max-width: 800px;
             width: 100%;
             text-align: center;
-            border: 1px solid #d1d5db; /* Subtle border */
+            border: 1px solid var(--container-border);
+            transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+            position: relative; /* For absolute positioning of toggles */
         }
         h1 {
-            color: #2563eb; /* Deeper blue for main heading */
-            font-weight: 800; /* Extra bold */
-            margin-bottom: 30px; /* More space */
+            color: var(--heading-color);
+            font-weight: 800;
+            margin-bottom: 30px;
+            transition: color 0.5s ease;
         }
 
         /* Text Display Area */
         .text-display {
-            background-color: #f1f5f9; /* Lighter background for text */
-            padding: 25px; /* Increased padding */
+            background-color: var(--text-display-bg);
+            padding: 25px;
             border-radius: 12px;
             margin-bottom: 30px;
-            font-size: 1.5rem; /* Larger font size */
-            line-height: 1.9; /* Improved line height */
+            font-size: 1.5rem;
+            line-height: 1.9;
             text-align: left;
-            min-height: 140px; /* Taller */
+            min-height: 140px;
             overflow-y: auto;
-            border: 2px solid #cbd5e1;
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.08); /* More pronounced inset shadow */
+            border: 2px solid var(--text-display-border);
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.08);
             user-select: none;
-            color: #334155; /* Darker text for better contrast */
+            color: var(--text-display-text-color);
+            transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
         }
         .text-display span {
             transition: background-color 0.1s, color 0.1s;
             display: inline-block;
-            padding: 0 2px; /* Slightly more padding for highlighted letters */
+            padding: 0 2px;
         }
         .correct {
-            color: #15803d; /* Darker green for correct */
+            color: #15803d; /* Specific color, usually doesn't change with theme */
         }
         .incorrect {
-            background-color: #dc2626; /* Stronger red background for incorrect */
+            background-color: #dc2626; /* Specific color */
             color: #ffffff;
             border-radius: 4px;
         }
         .current {
-            background-color: #93c5fd; /* Medium blue for current character */
+            background-color: var(--keyboard-key-highlight); /* Uses highlight color */
             border-radius: 4px;
-            box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); /* Subtle glow for current char */
+            box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); /* Shadow remains consistent */
         }
 
         /* User Input Field */
         .input-field {
             width: 100%;
-            padding: 18px 25px; /* Larger padding */
-            border: 2px solid #94a3b8;
+            padding: 18px 25px;
+            border: 2px solid var(--input-field-border);
             border-radius: 12px;
-            font-size: 1.4rem; /* Larger font */
+            font-size: 1.4rem;
             margin-bottom: 30px;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            color: #1f2937; /* Darker input text */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease, color 0.5s ease;
+            color: var(--input-field-text-color);
+            background-color: var(--text-display-bg); /* Use text display bg for input */
         }
         .input-field:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4); /* More prominent focus ring */
+            border-color: var(--button-bg);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
         }
 
         /* Stats Section */
@@ -113,54 +209,57 @@
             display: flex;
             justify-content: space-around;
             margin-bottom: 30px;
-            font-size: 1.3rem; /* Larger font */
-            color: #4b5563; /* Slightly darker color */
+            font-size: 1.3rem;
+            color: var(--stats-text-color);
             flex-wrap: wrap;
-            gap: 20px; /* Increased gap */
+            gap: 20px;
+            transition: color 0.5s ease;
         }
         .stats div {
-            padding: 12px 20px; /* More padding */
-            background-color: #f8fafc;
+            padding: 12px 20px;
+            background-color: var(--stats-bg);
             border-radius: 10px;
-            border: 1px solid #e2e8f0;
-            min-width: 140px; /* Wider stats boxes */
+            border: 1px solid var(--stats-border);
+            min-width: 140px;
             font-weight: 500;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.5s ease, border-color 0.5s ease;
         }
         .stats span {
-            font-weight: 700; /* Bolder stats values */
-            color: #1e293b;
+            font-weight: 700;
+            color: var(--stats-value-color);
+            transition: color 0.5s ease;
         }
 
         /* Button Group */
         .button-group button {
-            background-color: #3b82f6;
+            background-color: var(--button-bg);
             color: white;
-            padding: 16px 35px; /* Larger buttons */
+            padding: 16px 35px;
             border: none;
             border-radius: 12px;
-            font-size: 1.3rem; /* Larger font */
+            font-size: 1.3rem;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 6px 18px rgba(59, 130, 246, 0.35); /* More prominent shadow */
-            margin: 8px; /* More margin */
+            box-shadow: 0 6px 18px rgba(59, 130, 246, 0.35);
+            margin: 8px;
         }
         .button-group button:hover {
-            background-color: #2563eb;
-            transform: translateY(-3px); /* More pronounced lift */
+            background-color: var(--button-hover-bg);
+            transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(59, 130, 246, 0.45);
         }
         .button-group button:active {
-            background-color: #1d4ed8;
+            background-color: var(--button-active-bg);
             transform: translateY(0);
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         /* Message Box */
         .message-box {
-            background-color: #fff;
-            padding: 30px; /* More padding */
+            background-color: var(--message-box-bg);
+            padding: 30px;
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
             position: fixed;
@@ -170,16 +269,17 @@
             z-index: 1000;
             text-align: center;
             font-size: 1.3rem;
-            color: #1e293b;
-            max-width: 450px; /* Slightly wider */
+            color: var(--message-box-text-color);
+            max-width: 450px;
             width: 90%;
             animation: fadeIn 0.3s ease-out;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
         .message-box p {
             margin-bottom: 25px;
         }
         .message-box button {
-            padding: 12px 25px; /* Larger buttons */
+            padding: 12px 25px;
             border-radius: 10px;
             font-size: 1.1rem;
             font-weight: 600;
@@ -190,49 +290,52 @@
             opacity: 0.9;
         }
         #messageBoxOk {
-            background-color: #3b82f6;
+            background-color: var(--button-bg);
         }
-        #messageBoxYes {
-            background-color: #10b981; /* Green for positive action */
-        }
-        #messageBoxNo {
-            background-color: #ef4444; /* Red for negative action */
-        }
+        /* Removed messageBoxYes and messageBoxNo specific styling as they are removed */
         .overlay {
-            background: rgba(0, 0, 0, 0.6); /* Darker overlay */
+            background: rgba(0, 0, 0, 0.6);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+            display: none; /* Hidden by default */
         }
 
         /* Virtual Keyboard Styles */
         .keyboard-container {
-            background-color: #f1f5f9; /* Lighter background for keyboard */
+            background-color: var(--keyboard-container-bg);
             border-radius: 15px;
-            padding: 25px; /* More padding */
+            padding: 25px;
             margin-bottom: 30px;
             box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
-            gap: 10px; /* Increased gap between rows */
-            border: 1px solid #e2e8f0;
+            gap: 10px;
+            border: 1px solid var(--keyboard-container-border);
+            transition: background-color 0.5s ease, border-color 0.5s ease;
         }
         .keyboard-row {
             display: flex;
             justify-content: center;
-            gap: 7px; /* Increased gap between keys */
+            gap: 7px;
         }
         .keyboard-key {
-            background-color: #e2e8f0; /* Slightly darker key background */
-            color: #334155;
-            padding: 12px 14px; /* More padding */
-            border-radius: 10px; /* More rounded keys */
-            font-size: 1.1rem; /* Slightly larger key font */
-            font-weight: 700; /* Bolder key labels */
-            min-width: 50px; /* Slightly wider keys */
+            background-color: var(--keyboard-key-bg);
+            color: var(--keyboard-key-color);
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            min-width: 50px;
             text-align: center;
             cursor: default;
             user-select: none;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Clearer key shadow */
-            transition: background-color 0.1s, transform 0.05s, box-shadow 0.1s;
-            border: 1px solid #cbd5e1;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.1s, transform 0.05s, box-shadow 0.1s, color 0.1s, border-color 0.1s;
+            border: 1px solid var(--keyboard-key-border);
         }
         .keyboard-key.wide {
             min-width: 90px;
@@ -246,46 +349,48 @@
 
         /* Key highlight for current character */
         .keyboard-key.highlight-current {
-            background-color: #60a5fa; /* Vibrant blue for current key */
+            background-color: var(--keyboard-key-highlight);
             color: white;
-            transform: translateY(-2px); /* More lift */
-            box-shadow: 0 6px 12px rgba(96, 165, 250, 0.5); /* Stronger glow */
-            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(96, 165, 250, 0.5);
+            border-color: var(--keyboard-key-highlight-border);
         }
 
         /* Key pressed effect */
         .keyboard-key.key-pressed {
-            background-color: #3b82f6;
+            background-color: var(--keyboard-key-pressed);
             color: white;
             transform: translateY(0);
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
-            border-color: #2563eb;
+            border-color: var(--keyboard-key-pressed-border);
         }
 
         /* Home row keys */
         .keyboard-key[data-key="f"],
         .keyboard-key[data-key="j"] {
-            background-color: #facc15; /* Brighter yellow for home row bumps */
-            color: #422006; /* Darker text for contrast */
+            background-color: var(--home-row-bg);
+            color: var(--home-row-color);
             box-shadow: 0 3px 6px rgba(250, 204, 21, 0.4);
         }
 
         /* Hand placement guidance */
         .hand-guidance {
-            font-size: 1rem; /* Slightly larger font */
-            color: #475569;
+            font-size: 1rem;
+            color: var(--hand-guidance-color);
             margin-top: 20px;
             margin-bottom: 20px;
             line-height: 1.6;
             text-align: left;
-            background-color: #f8fafc;
-            padding: 20px; /* More padding */
+            background-color: var(--hand-guidance-bg);
+            padding: 20px;
             border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--hand-guidance-border);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
         }
         .hand-guidance strong {
-            color: #1e293b;
+            color: var(--hand-guidance-strong-color);
+            transition: color 0.5s ease;
         }
 
         /* Level Selector */
@@ -294,69 +399,61 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px; /* Increased gap */
+            gap: 15px;
         }
         .level-selector label {
-            font-size: 1.2rem; /* Larger font */
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #334155;
+            color: var(--level-select-label);
+            transition: color 0.5s ease;
         }
         .level-selector select {
-            padding: 12px 20px; /* Larger padding */
-            border: 2px solid #94a3b8;
+            padding: 12px 20px;
+            border: 2px solid var(--level-select-border);
             border-radius: 10px;
             font-size: 1.2rem;
-            background-color: white;
+            background-color: var(--level-select-bg);
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%236B7280' d='M9.293 12.95l.707.707L15 8.172l-1.414-1.414L10 10.343l-3.586-3.585L5 8.172z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 15px center; /* Adjusted position */
-            background-size: 1.4em; /* Larger arrow */
+            background-position: right 15px center;
+            background-size: 1.4em;
             cursor: pointer;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.5s ease;
         }
         .level-selector select:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: var(--button-bg);
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
         }
 
-        /* Game Canvas Styles */
-        #gameCanvas {
-            display: none;
-            width: 100%;
-            height: 180px; /* Taller canvas */
-            max-width: 850px; /* Match container width */
-            margin: 0 auto 30px auto;
-            border: 2px solid #a78bfa; /* Purple border for fun */
-            border-radius: 15px;
-            background: linear-gradient(to bottom, #a0c4ff, #8cb4ff); /* Gradient sky */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
+        /* Removed gameCanvas styles as the element is removed */
 
         /* Tutor speaking indicator */
         #tutorSpeaking {
-            background-color: #dbeafe; /* Light blue background */
-            color: #1e40af; /* Darker blue text */
+            background-color: var(--tutor-speaking-bg);
+            color: var(--tutor-speaking-color);
             padding: 10px 20px;
             border-radius: 10px;
             margin-bottom: 20px;
             font-size: 1.1rem;
             font-weight: 600;
-            display: none; /* Hidden by default */
+            display: none;
             align-items: center;
             justify-content: center;
             gap: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-            border: 1px solid #bfdbfe;
+            border: 1px solid var(--tutor-speaking-border);
+            transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
         }
         #tutorSpeaking .dot {
             width: 8px;
             height: 8px;
-            background-color: #3b82f6;
+            background-color: var(--tutor-speaking-dot);
             border-radius: 50%;
             display: inline-block;
             animation: pulse 1.5s infinite ease-in-out;
+            transition: background-color 0.5s ease;
         }
         #tutorSpeaking .dot:nth-child(2) { animation-delay: 0.2s; }
         #tutorSpeaking .dot:nth-child(3) { animation-delay: 0.4s; }
@@ -366,12 +463,89 @@
             50% { transform: scale(1.2); opacity: 0.7; }
         }
 
-
         /* Keyframe for fadeIn animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translate(-50%, -60%); }
             to { opacity: 1; transform: translate(-50%, -50%); }
         }
+
+        /* Toggle Switches */
+        .toggle-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Round sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        .toggle-label {
+            color: var(--text-display-text-color);
+            font-size: 0.9rem;
+            margin-right: 10px;
+            font-weight: 600;
+            transition: color 0.5s ease;
+        }
+
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -431,12 +605,33 @@
                 font-size: 1.1rem;
                 padding: 10px 15px;
             }
-            #gameCanvas {
-                height: 150px;
-            }
+            /* Removed gameCanvas responsiveness */
             #tutorSpeaking {
                 font-size: 1rem;
                 padding: 8px 15px;
+            }
+            .toggle-container {
+                top: 10px;
+                right: 10px;
+                flex-direction: row;
+                gap: 5px;
+            }
+            .toggle-label {
+                font-size: 0.8rem;
+                margin-right: 5px;
+            }
+            .toggle-switch {
+                width: 45px;
+                height: 26px;
+            }
+            .slider:before {
+                height: 20px;
+                width: 20px;
+                left: 3px;
+                bottom: 3px;
+            }
+            input:checked + .slider:before {
+                transform: translateX(19px);
             }
         }
 
@@ -457,7 +652,7 @@
                 margin-bottom: 20px;
             }
             .input-field {
-                font-size: 1.1rem; /* Adjusted for smaller screens */
+                font-size: 1.1rem;
                 padding: 12px 15px;
                 margin-bottom: 20px;
             }
@@ -517,10 +712,7 @@
                 margin-top: 10px;
                 margin-bottom: 10px;
             }
-            #gameCanvas {
-                height: 120px;
-                margin-bottom: 20px;
-            }
+            /* Removed gameCanvas responsiveness */
             .message-box {
                 padding: 20px;
                 font-size: 1rem;
@@ -529,11 +721,30 @@
                 font-size: 0.9rem;
                 padding: 6px 10px;
             }
+            .toggle-container {
+                position: static; /* Remove absolute positioning on very small screens */
+                flex-direction: column;
+                margin-bottom: 10px;
+                align-items: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Toggle Switches Container -->
+        <div class="toggle-container">
+            <!-- Removed Game Toggle -->
+            <!-- Dark Mode Toggle -->
+            <label class="flex items-center cursor-pointer">
+                <span class="toggle-label mr-2">Dark Mode</span>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="darkModeToggle" class="hidden">
+                    <span class="slider round"></span>
+                </div>
+            </label>
+        </div>
+
         <h1 class="text-4xl font-extrabold mb-6">Fast Typing Keyboard</h1>
 
         <!-- Level Selector -->
@@ -634,8 +845,7 @@
             </div>
         </div>
 
-        <!-- Game Canvas -->
-        <canvas id="gameCanvas"></canvas>
+        <!-- Removed Game Canvas -->
 
         <!-- Text Display Area -->
         <div id="textDisplay" class="text-display"></div>
@@ -648,7 +858,7 @@
             <div>WPM: <span id="wpm">0</span></div>
             <div>Accuracy: <span id="accuracy">100%</span></div>
             <div>Time: <span id="timer">0s</span></div>
-            <div>Errors: <span id="errors">0</span></div> <!-- New: Errors display -->
+            <div>Errors: <span id="errors">0</span></div>
         </div>
 
         <!-- Control Buttons -->
@@ -663,8 +873,7 @@
         <p id="messageText"></p>
         <div id="messageBoxButtons" class="flex justify-center gap-4 mt-4">
             <button id="messageBoxOk" class="px-5 py-2 rounded-lg text-white">OK</button>
-            <button id="messageBoxYes" class="hidden px-5 py-2 rounded-lg text-white">Yes, play game!</button>
-            <button id="messageBoxNo" class="hidden px-5 py-2 rounded-lg text-white">No, thanks</button>
+            <!-- Removed Yes/No buttons -->
         </div>
     </div>
 
@@ -718,20 +927,18 @@
         const wpmSpan = document.getElementById('wpm');
         const accuracySpan = document.getElementById('accuracy');
         const timerSpan = document.getElementById('timer');
-        const errorsSpan = document.getElementById('errors'); // New: Errors display element
+        const errorsSpan = document.getElementById('errors');
         const startButton = document.getElementById('startButton');
         const messageBox = document.getElementById('messageBox');
         const messageText = document.getElementById('messageText');
         const messageBoxOk = document.getElementById('messageBoxOk');
-        const messageBoxYes = document.getElementById('messageBoxYes');
-        const messageBoxNo = document.getElementById('messageBoxNo');
         const overlay = document.getElementById('overlay');
         const levelSelect = document.getElementById('levelSelect');
         const keyboardKeys = document.querySelectorAll('.keyboard-key');
-        const gameCanvas = document.getElementById('gameCanvas');
         const tutorSpeakingIndicator = document.getElementById('tutorSpeaking');
+        const darkModeToggle = document.getElementById('darkModeToggle'); // Dark mode toggle remains
 
-        // Game state variables
+        // Game state variables (removed all game-specific ones)
         let currentText = '';
         let currentIndex = 0;
         let startTime = 0;
@@ -741,54 +948,23 @@
         let errors = 0;
         let testStarted = false;
         let currentLevel = 'beginner'; // Default level
-        let previousTypedValueLength = 0; // To track new characters for game speed
-        let testsCompletedCount = 0; // Counter for completed tests
-        let gameEnabled = false; // Flag to enable/disable the car game
-        const GAME_PROMPT_THRESHOLD = 3; // Number of tests before prompting for the game
-        let firstTestEverStarted = false; // New flag to track the very first test start for welcome message
+        let previousTypedValueLength = 0;
+        let firstTestEverStarted = false;
 
-        // Game canvas variables
-        const ctx = gameCanvas.getContext('2d');
-        let carX = gameCanvas.width / 4; // Car's X position on canvas
-        const carY = gameCanvas.height - 40; // Car's Y position (constant, near bottom of canvas)
-        let gameSpeed = 0; // Initial speed of the game visual (road movement)
-        const maxGameSpeed = 10; // Max speed for the car visual
-        const speedIncrement = 0.5; // How much speed increases per correct char
-        const speedDecrement = 1; // How much speed decreases per incorrect char
-        let roadLineOffset = 0; // For animating road lines
-        let animationFrameId = null; // For requestAnimationFrame
-
-        /**
-         * Adjusts the canvas dimensions to be responsive.
-         */
-        function setupCanvas() {
-            gameCanvas.width = gameCanvas.offsetWidth;
-            gameCanvas.height = gameCanvas.offsetHeight;
-            // Re-calculate carX based on new width
-            carX = gameCanvas.width / 4;
-        }
+        // Removed game canvas variables and context
 
         /**
          * Shows a custom message box instead of alert().
          * @param {string} message The message to display.
-         * @param {boolean} [isGamePrompt=false] True if this is a game prompt, showing Yes/No buttons.
          */
-        function showMessageBox(message, isGamePrompt = false) {
+        function showMessageBox(message) { // Simplified, no game prompt logic
             messageText.textContent = message;
             messageBox.classList.remove('hidden');
             overlay.style.display = 'block';
             typingInput.disabled = true;
-            startButton.disabled = true; // Disable main start button while message box is open
-
-            if (isGamePrompt) {
-                messageBoxOk.classList.add('hidden');
-                messageBoxYes.classList.remove('hidden');
-                messageBoxNo.classList.remove('hidden');
-            } else {
-                messageBoxOk.classList.remove('hidden');
-                messageBoxYes.classList.add('hidden');
-                messageBoxNo.classList.add('hidden');
-            }
+            startButton.disabled = true;
+            darkModeToggle.disabled = true; // Still disable toggles
+            // Removed game-specific buttons and logic
         }
 
         /**
@@ -797,37 +973,26 @@
         function hideMessageBox() {
             messageBox.classList.add('hidden');
             overlay.style.display = 'none';
-            startButton.disabled = false; // Re-enable main start button
-            if (testStarted) { // Only re-enable typing input if a test is ongoing (e.g., after dismissing a non-game message)
+            startButton.disabled = false;
+            darkModeToggle.disabled = false; // Enable toggles after message box closes
+
+            if (testStarted) {
                 typingInput.disabled = false;
                 typingInput.focus();
             } else {
-                // If test is not started (e.g., after test finished message), ensure input remains disabled until start is clicked
                 typingInput.disabled = true;
             }
         }
 
-        // Event listeners for message box buttons
+        // Event listener for message box buttons
         messageBoxOk.addEventListener('click', () => {
             hideMessageBox();
-            if (!testStarted) { // If test just finished and OK was clicked, prepare for a new test
-                startButton.textContent = 'Start New Test';
+            if (!testStarted) {
+                startButton.textContent = 'Continue Practice';
             }
         });
 
-        messageBoxYes.addEventListener('click', () => {
-            gameEnabled = true;
-            testsCompletedCount = 0; // Reset counter so the game is now permanently active (until reload)
-            hideMessageBox();
-            startActualTest(); // Immediately start a new test with game enabled
-        });
-
-        messageBoxNo.addEventListener('click', () => {
-            gameEnabled = false;
-            testsCompletedCount = 0; // Reset counter so prompt reappears after next GAME_PROMPT_THRESHOLD tests
-            hideMessageBox();
-            startActualTest(); // Immediately start a new test without game enabled
-        });
+        // Removed messageBoxYes and messageBoxNo event listeners
 
         /**
          * Selects a random sentence based on the current level.
@@ -857,7 +1022,6 @@
                 let charToHighlight = currentText[currentIndex];
                 let keyElement = null;
 
-                // Handle Shift for uppercase letters and symbols
                 if (charToHighlight === charToHighlight.toUpperCase() && charToHighlight.match(/[A-Z]/)) {
                     keyElement = document.querySelector(`.keyboard-key[data-key="${charToHighlight.toLowerCase()}"]`);
                     document.querySelector('.keyboard-key[data-key="shift-left"]').classList.add('highlight-current');
@@ -955,11 +1119,11 @@
 
                 const accuracy = totalTypedCharacters === 0 ? 100 : Math.round((correctCharacters / totalTypedCharacters) * 100);
                 accuracySpan.textContent = `${accuracy}%`;
-                errorsSpan.textContent = errors; // Update errors display
+                errorsSpan.textContent = errors;
             } else {
                 wpmSpan.textContent = '0';
                 accuracySpan.textContent = '100%';
-                errorsSpan.textContent = '0'; // Ensure errors is 0 initially
+                errorsSpan.textContent = '0';
             }
         }
 
@@ -973,7 +1137,7 @@
             startTime = 0;
             totalTypedCharacters = 0;
             correctCharacters = 0;
-            errors = 0; // Reset errors on game reset
+            errors = 0;
             testStarted = false;
             previousTypedValueLength = 0;
 
@@ -982,26 +1146,24 @@
             wpmSpan.textContent = '0';
             accuracySpan.textContent = '100%';
             timerSpan.textContent = '0s';
-            errorsSpan.textContent = '0'; // Reset errors display
+            errorsSpan.textContent = '0';
             startButton.textContent = 'Start Test';
             startButton.classList.remove('bg-green-600', 'hover:bg-green-700');
             startButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
             levelSelect.disabled = false;
 
-            gameSpeed = 0; // Stop car animation on reset
-            gameCanvas.style.display = 'none'; // Ensure canvas is hidden on reset
+            // Removed game-specific resets (e.g., gameSpeed, gameCanvas display)
 
             renderText();
         }
 
         /**
-         * Starts the actual typing test, managing game visibility.
+         * Starts the actual typing test.
          */
         function startActualTest() {
-            // If it's the very first time starting the test, play the welcome message.
             if (!firstTestEverStarted) {
                 speakWelcomeMessage();
-                firstTestEverStarted = true; // Set the flag to true after the first play
+                firstTestEverStarted = true;
             }
 
             resetGame(); // Ensure everything is clean for the new test
@@ -1015,16 +1177,11 @@
             startButton.classList.add('bg-green-600', 'hover:bg-green-700');
             levelSelect.disabled = true;
 
-            if (gameEnabled) { // Show canvas if game is enabled
-                gameCanvas.style.display = 'block';
-            } else {
-                gameCanvas.style.display = 'none'; // Keep canvas hidden if game is not enabled
-            }
+            // Removed gameCanvas display logic
         }
 
-
         /**
-         * Handles user input from the typing field, updating typing stats and game speed.
+         * Handles user input from the typing field, updating typing stats.
          * @param {Event} event The input event.
          */
         function handleInput(event) {
@@ -1037,21 +1194,11 @@
                 simulateKeyPress(event.data);
             }
 
-            // Logic for updating correct/incorrect characters and index, and influencing game speed
+            // Logic for updating correct/incorrect characters and index
             if (typedValue.length > previousTypedValueLength) {
-                // A new character was added
-                const originalChar = currentText[typedValue.length - 1];
-                const typedChar = typedValue[typedValue.length - 1];
-                if (typedChar === originalChar) {
-                    // Correct new character
-                    if (gameEnabled) updateGameSpeed(true);
-                } else {
-                    // Incorrect new character
-                    if (gameEnabled) updateGameSpeed(false);
-                }
-            } // No speed change for backspace or in-place replacement.
+                // No game speed update needed
+            }
 
-            // Recalculate correctCharacters and errors based on the *entire* current typedValue
             correctCharacters = 0;
             errors = 0;
             for (let i = 0; i < typedValue.length; i++) {
@@ -1077,107 +1224,20 @@
 
                 const finalWPM = wpmSpan.textContent;
                 const finalAccuracy = accuracySpan.textContent;
-                const finalErrors = errorsSpan.textContent; // Get final errors
+                const finalErrors = errorsSpan.textContent;
 
-                testsCompletedCount++; // Increment count only on successful completion
+                // Removed testsCompletedCount and game-related prompts
 
                 clearKeyHighlights();
-                gameSpeed = 0; // Stop car when test ends
+                // Removed game-related stops
 
-                // Check if it's time to prompt for the game
-                if (!gameEnabled && testsCompletedCount >= GAME_PROMPT_THRESHOLD) {
-                    showMessageBox(
-                        `Test Finished! Your WPM: ${finalWPM}, Accuracy: ${finalAccuracy}, Errors: ${finalErrors}. You've completed ${testsCompletedCount} practice rounds. Would you like to enable the typing car game for more fun?`,
-                        true
-                    );
-                } else {
-                    // Regular completion message
-                    showMessageBox(`Test Finished! Your WPM: ${finalWPM}, Accuracy: ${finalAccuracy}, Errors: ${finalErrors}.`);
-                    startButton.textContent = 'Start New Test';
-                }
+                // Simply show the results message
+                showMessageBox(`Test Finished! Your WPM: ${finalWPM}, Accuracy: ${finalAccuracy}, Errors: ${finalErrors}.`);
+                startButton.textContent = 'Continue Practice'; // Always "Continue Practice" after a finished test
             }
         }
 
-        // --- Game Canvas Drawing Functions ---
-
-        /**
-         * Draws the car on the canvas.
-         */
-        function drawCar() {
-            // Body
-            ctx.fillStyle = '#3b82f6'; /* Blue car */
-            ctx.beginPath();
-            ctx.roundRect(carX, carY - 20, 60, 20, 5); /* Main body */
-            ctx.fill();
-
-            // Cabin
-            ctx.fillStyle = '#60a5fa'; /* Lighter blue for cabin */
-            ctx.beginPath();
-            ctx.roundRect(carX + 10, carY - 35, 40, 15, 3);
-            ctx.fill();
-
-            // Wheels
-            ctx.fillStyle = '#334155'; /* Dark grey for wheels */
-            ctx.beginPath();
-            ctx.arc(carX + 15, carY + 5, 10, 0, Math.PI * 2);
-            ctx.arc(carX + 45, carY + 5, 10, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        /**
-         * Draws the road on the canvas, with animated lines.
-         */
-        function drawRoad() {
-            ctx.fillStyle = '#6b7280'; /* Darker grey for road */
-            ctx.fillRect(0, gameCanvas.height - 20, gameCanvas.width, 20); /* Road base */
-
-            // Road lines
-            ctx.fillStyle = '#fcd34d'; /* Yellow lines */
-            const lineHeight = 5;
-            const lineGap = 15;
-            const lineWidth = 30;
-            const totalLinePattern = lineWidth + lineGap; /* Space occupied by one line + gap */
-
-            roadLineOffset += gameSpeed * 0.5; /* Move lines based on game speed (adjusted for visual smoothness) */
-            if (roadLineOffset > totalLinePattern) {
-                roadLineOffset %= totalLinePattern;
-            }
-
-            // Draw multiple lines to cover the entire width
-            for (let i = -2; i < gameCanvas.width / totalLinePattern + 2; i++) { /* Render extra lines off-screen for seamless loop */
-                ctx.fillRect(i * totalLinePattern + roadLineOffset, gameCanvas.height - 10, lineWidth, 2); /* Dashed lines */
-            }
-        }
-
-        /**
-         * Updates the game speed based on typing correctness.
-         * @param {boolean} isCorrect True if the last typed character was correct, false otherwise.
-         */
-        function updateGameSpeed(isCorrect) {
-            if (isCorrect) {
-                gameSpeed = Math.min(maxGameSpeed, gameSpeed + speedIncrement);
-            } else {
-                gameSpeed = Math.max(0, gameSpeed - speedDecrement);
-            }
-        }
-
-        /**
-         * Main game animation loop. Clears canvas, draws elements, and requests next frame.
-         */
-        function gameLoop() {
-            ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height); /* Clear canvas */
-
-            if (gameEnabled) { /* Only draw game elements if game is enabled */
-                drawRoad();
-                drawCar();
-            } else {
-                // Draw a static background if game is not enabled to avoid blank canvas
-                ctx.fillStyle = '#a0c4ff'; /* Sky color */
-                ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
-            }
-
-            animationFrameId = requestAnimationFrame(gameLoop);
-        }
+        // Removed all Game Canvas Drawing Functions (drawSky, drawCar, drawRoad, updateGameSpeed, gameLoop)
 
         // Utility functions for audio conversion (PCM to WAV)
         function base64ToArrayBuffer(base64) {
@@ -1194,32 +1254,19 @@
             const wavHeader = new ArrayBuffer(44);
             const view = new DataView(wavHeader);
 
-            // RIFF identifier
             writeString(view, 0, 'RIFF');
-            // File length (placeholder)
-            view.setUint32(4, 36 + pcm16.length * 2, true); // 36 + dataSize
-            // RIFF type
+            view.setUint32(4, 36 + pcm16.length * 2, true);
             writeString(view, 8, 'WAVE');
-            // format chunk identifier
             writeString(view, 12, 'fmt ');
-            // format chunk length
             view.setUint32(16, 16, true);
-            // sample format (raw PCM)
-            view.setUint16(20, 1, true);
-            // channel count
-            view.setUint16(22, 1, true); // Mono
-            // sample rate
+            view.setUint16(20, 1, true); // Mono
+            view.setUint16(22, 1, true);
             view.setUint32(24, sampleRate, true);
-            // byte rate (sample rate * block align)
-            view.setUint32(28, sampleRate * 2, true); // 2 bytes per sample
-            // block align (channel count * bytes per sample)
-            view.setUint16(32, 2, true); // 1 channel * 2 bytes/sample
-            // bits per sample
-            view.setUint16(34, 16, true); // PCM 16-bit
-            // data chunk identifier
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
             writeString(view, 36, 'data');
-            // data chunk length (placeholder)
-            view.setUint32(40, pcm16.length * 2, true); // dataSize
+            view.setUint32(40, pcm16.length * 2, true);
 
             const blob = new Blob([wavHeader, pcm16], { type: 'audio/wav' });
             return blob;
@@ -1234,7 +1281,7 @@
         async function speakWelcomeMessage() {
             const welcomeMessage = "Welcome to your online fast typing class! Let's get started.";
 
-            tutorSpeakingIndicator.style.display = 'flex'; // Show indicator
+            tutorSpeakingIndicator.style.display = 'flex';
 
             const payload = {
                 contents: [{
@@ -1244,14 +1291,14 @@
                     responseModalities: ["AUDIO"],
                     speechConfig: {
                         voiceConfig: {
-                            prebuiltVoiceConfig: { voiceName: "Kore" } // A female-sounding voice
+                            prebuiltVoiceConfig: { voiceName: "Kore" }
                         }
                     }
                 },
                 model: "gemini-2.5-flash-preview-tts"
             };
 
-            const apiKey = ""; // Leave as-is, Canvas will provide
+            const apiKey = "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
 
             try {
@@ -1260,7 +1307,25 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                const result = await response.json();
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('API request failed with status:', response.status, response.statusText, 'Response body:', errorText);
+                    tutorSpeakingIndicator.textContent = `Tutor error: ${response.status} ${response.statusText}`;
+                    setTimeout(() => tutorSpeakingIndicator.style.display = 'none', 3000);
+                    return;
+                }
+
+                let result;
+                try {
+                    result = await response.json();
+                } catch (jsonParseError) {
+                    const rawText = await response.text();
+                    console.error('Error parsing JSON from API response:', jsonParseError, 'Raw response content:', rawText);
+                    tutorSpeakingIndicator.textContent = "Tutor error: Corrupted response data.";
+                    setTimeout(() => tutorSpeakingIndicator.style.display = 'none', 3000);
+                    return;
+                }
 
                 const part = result?.candidates?.[0]?.content?.parts?.[0];
                 const audioData = part?.inlineData?.data;
@@ -1268,25 +1333,25 @@
 
                 if (audioData && mimeType && mimeType.startsWith("audio/")) {
                     const sampleRateMatch = mimeType.match(/rate=(\d+)/);
-                    const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 16000; // Default if not found
+                    const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 16000;
 
                     const pcmData = base64ToArrayBuffer(audioData);
                     const pcm16 = new Int16Array(pcmData);
                     const wavBlob = pcmToWav(pcm16, sampleRate);
-                    const audio = new Audio(URL.createObjectURL(wavBlob)); // Create URL from blob
+                    const audio = new Audio(URL.createObjectURL(wavBlob));
                     audio.play();
 
                     audio.onended = () => {
-                        tutorSpeakingIndicator.style.display = 'none'; // Hide indicator when done
+                        tutorSpeakingIndicator.style.display = 'none';
                     };
                 } else {
-                    console.error('Error: Audio data or mime type missing from API response.', result);
-                    tutorSpeakingIndicator.textContent = "Tutor could not speak.";
+                    console.error('Error: Audio data or mime type missing from API response. Result:', result);
+                    tutorSpeakingIndicator.textContent = "Tutor could not speak (no audio data).";
                     setTimeout(() => tutorSpeakingIndicator.style.display = 'none', 3000);
                 }
             } catch (error) {
-                console.error('Error calling TTS API:', error);
-                tutorSpeakingIndicator.textContent = "Error speaking.";
+                console.error('Error calling TTS API (network/general fetch issue):', error);
+                tutorSpeakingIndicator.textContent = "Tutor error: Network issue.";
                 setTimeout(() => tutorSpeakingIndicator.style.display = 'none', 3000);
             }
         }
@@ -1294,18 +1359,10 @@
 
         // Event listener for the main Start/Reset button
         startButton.addEventListener('click', () => {
-            if (testStarted) { /* If a test is currently running, this button acts as "Reset" */
+            if (testStarted) {
                 resetGame();
-            } else { /* If no test is running, this button acts as "Start" */
-                if (!gameEnabled && testsCompletedCount >= GAME_PROMPT_THRESHOLD) {
-                    showMessageBox(
-                        `You've completed ${testsCompletedCount} practice rounds! Would you like to enable the typing car game for more fun?`,
-                        true
-                    );
-                } else {
-                    // Either game is already enabled, or not enough tests completed for prompt
-                    startActualTest();
-                }
+            } else {
+                startActualTest();
             }
         });
 
@@ -1313,19 +1370,40 @@
 
         levelSelect.addEventListener('change', (event) => {
             currentLevel = event.target.value;
-            resetGame(); /* Reset game with new level's sentences */
+            resetGame();
         });
 
-        // Initialize the game and start the animation loop when the page loads
+        // Removed Game Toggle event listener
+
+        // Event listener for Dark Mode Toggle
+        darkModeToggle.addEventListener('change', () => {
+            if (darkModeToggle.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Initialize the app when the page loads
         window.onload = function() {
-            setupCanvas(); /* Set up canvas dimensions */
-            resetGame(); /* Set up initial text and disable input, reset typing stats */
-            gameLoop(); /* Start the animation loop (car will be static until test starts) */
-            // speakWelcomeMessage() is now called when the test actually starts via startActualTest()
+            // Apply saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.checked = true;
+            } else {
+                document.body.classList.remove('dark-mode');
+                darkModeToggle.checked = false;
+            }
+
+            // Removed setupCanvas as gameCanvas is removed
+            resetGame(); // Ensure initial state is clean
+            // Removed gameLoop call
         };
 
-        // Handle canvas resize
-        window.addEventListener('resize', setupCanvas);
+        // Removed Handle canvas resize
     </script>
 </body>
 </html>
