@@ -889,16 +889,40 @@
         // Sentences for different typing levels
         const levelSentences = {
             beginner: [
+                // Home row practice
                 "a s d f j k l ;",
-                "a a a s s s d d d",
-                "f j f j k l k l",
+                "f j f j d k d k",
+                "a d l ; s k f j",
+                "asdf jkl;",
+                "fdsa ;lkj",
+                "a j s k d l f ;",
+                // Left hand focus
+                "q w e r t",
+                "qaz wsx edc rfv tgb",
+                "left hand keys asdfg qwert zxcvb",
+                "awe qsd erf zxc",
+                "fast we run",
+                "was red tree",
+                "quick zebra",
+                // Right hand focus
+                "y u i o p",
+                "yhn ujm ik, ol. p;/",
+                "right hand keys jkl; yuiop nm,./",
+                "jul ik, ol. mnb",
+                "him non polo",
+                "my oil pie",
+                "very good luck",
+                // Mixed short words
                 "the and for is it",
                 "a cat a dog a hat",
                 "my pen my bag my book",
                 "i am you are he is",
                 "go go go no no no",
                 "yes yes yes one two three",
-                "red blue green yellow"
+                "red blue green yellow",
+                "big small tall short",
+                "open close push pull",
+                "light dark warm cold"
             ],
             intermediate: [
                 "The quick brown fox jumps over the lazy dog.",
@@ -936,7 +960,7 @@
         const levelSelect = document.getElementById('levelSelect');
         const keyboardKeys = document.querySelectorAll('.keyboard-key');
         const tutorSpeakingIndicator = document.getElementById('tutorSpeaking');
-        const darkModeToggle = document.getElementById('darkModeToggle'); // Dark mode toggle remains
+        const darkModeToggle = document.getElementById('darkModeToggle');
 
         // Game state variables (removed all game-specific ones)
         let currentText = '';
@@ -951,20 +975,17 @@
         let previousTypedValueLength = 0;
         let firstTestEverStarted = false;
 
-        // Removed game canvas variables and context
-
         /**
          * Shows a custom message box instead of alert().
          * @param {string} message The message to display.
          */
-        function showMessageBox(message) { // Simplified, no game prompt logic
+        function showMessageBox(message) {
             messageText.textContent = message;
             messageBox.classList.remove('hidden');
             overlay.style.display = 'block';
             typingInput.disabled = true;
             startButton.disabled = true;
-            darkModeToggle.disabled = true; // Still disable toggles
-            // Removed game-specific buttons and logic
+            darkModeToggle.disabled = true;
         }
 
         /**
@@ -974,7 +995,7 @@
             messageBox.classList.add('hidden');
             overlay.style.display = 'none';
             startButton.disabled = false;
-            darkModeToggle.disabled = false; // Enable toggles after message box closes
+            darkModeToggle.disabled = false;
 
             if (testStarted) {
                 typingInput.disabled = false;
@@ -991,8 +1012,6 @@
                 startButton.textContent = 'Continue Practice';
             }
         });
-
-        // Removed messageBoxYes and messageBoxNo event listeners
 
         /**
          * Selects a random sentence based on the current level.
@@ -1152,8 +1171,6 @@
             startButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
             levelSelect.disabled = false;
 
-            // Removed game-specific resets (e.g., gameSpeed, gameCanvas display)
-
             renderText();
         }
 
@@ -1166,7 +1183,7 @@
                 firstTestEverStarted = true;
             }
 
-            resetGame(); // Ensure everything is clean for the new test
+            resetGame();
             testStarted = true;
             typingInput.disabled = false;
             typingInput.focus();
@@ -1176,8 +1193,6 @@
             startButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
             startButton.classList.add('bg-green-600', 'hover:bg-green-700');
             levelSelect.disabled = true;
-
-            // Removed gameCanvas display logic
         }
 
         /**
@@ -1192,11 +1207,6 @@
             // Simulate key press on virtual keyboard
             if (event.data) {
                 simulateKeyPress(event.data);
-            }
-
-            // Logic for updating correct/incorrect characters and index
-            if (typedValue.length > previousTypedValueLength) {
-                // No game speed update needed
             }
 
             correctCharacters = 0;
@@ -1226,18 +1236,12 @@
                 const finalAccuracy = accuracySpan.textContent;
                 const finalErrors = errorsSpan.textContent;
 
-                // Removed testsCompletedCount and game-related prompts
-
                 clearKeyHighlights();
-                // Removed game-related stops
 
-                // Simply show the results message
                 showMessageBox(`Test Finished! Your WPM: ${finalWPM}, Accuracy: ${finalAccuracy}, Errors: ${finalErrors}.`);
-                startButton.textContent = 'Continue Practice'; // Always "Continue Practice" after a finished test
+                startButton.textContent = 'Continue Practice';
             }
         }
-
-        // Removed all Game Canvas Drawing Functions (drawSky, drawCar, drawRoad, updateGameSpeed, gameLoop)
 
         // Utility functions for audio conversion (PCM to WAV)
         function base64ToArrayBuffer(base64) {
@@ -1373,8 +1377,6 @@
             resetGame();
         });
 
-        // Removed Game Toggle event listener
-
         // Event listener for Dark Mode Toggle
         darkModeToggle.addEventListener('change', () => {
             if (darkModeToggle.checked) {
@@ -1398,12 +1400,8 @@
                 darkModeToggle.checked = false;
             }
 
-            // Removed setupCanvas as gameCanvas is removed
-            resetGame(); // Ensure initial state is clean
-            // Removed gameLoop call
+            resetGame();
         };
-
-        // Removed Handle canvas resize
     </script>
 </body>
 </html>
